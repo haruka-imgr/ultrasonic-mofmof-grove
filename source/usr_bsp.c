@@ -28,7 +28,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "pico/stdlib.h"
-#include "class/cdc/cdc_device.h"
 
 #include "constant.h"
 #include "usr_def.h"

@@ -26,7 +26,7 @@
 
 #include "pico/stdlib.h"
 #include <stdio.h>
-#include "class/cdc/cdc_device.h"
+#include <string.h>
 
 #include "constant.h"
 #include "ch_lib.h"
@@ -46,10 +46,10 @@
 
 #define	NO_TOKEN				(-1)	/* token is not received properly */
 
-#define SENSOR_TYPE         (CHIRP_TYPE_CH201)
-#define RANGE_LIMIT_UPPER   (320.0)
-#define RANGE_LIMIT_LOWER   (280.0)
-#define AMP_MAX             (30000u)
+#define SENSOR_TYPE         (CHIRP_TYPE_CH101)
+#define RANGE_LIMIT_UPPER   (160.0)
+#define RANGE_LIMIT_LOWER   (130.0)
+#define AMP_MAX             (18000u)
 
 /* command code definition */
 #define	SEN_CMDCODE_STOP	(0U)
@@ -58,6 +58,11 @@
 #define	SEN_CMDCODE_DIST	(3U)
 #define	SEN_CMDCODE_CLR		(4U)
 #define	SEN_CMDCODE_UNKNOWN	(5U)
+
+#define UART_PORT uart0
+#define UART_BAUD 115200
+#define UART_TX_PIN 12
+#define UART_RX_PIN 13
 
 typedef float float32_t;
 typedef struct {
@@ -122,8 +127,10 @@ int main(void)
 	int8_t			ret_len;
     int8_t       	ret_ch = RET_NG;
 
-    (void)stdio_init_all();
-	
+	// Initialize UART
+	stdio_uart_init_full(UART_PORT, UART_BAUD, UART_TX_PIN, UART_RX_PIN);
+	gpio_pull_up(UART_RX_PIN);
+
     while (true) {
 		ret_len = get_token( cmd_buf );
 		if ( ret_len == NO_TOKEN ){
@@ -170,13 +177,13 @@ int8_t get_token( uint8_t* cmd_buf )
 	uint8_t ch;
 	int8_t	ret;
 
-	if ( tud_cdc_available() > 0u ){
+	if ( uart_is_readable(UART_PORT) > 0u ){
 		/* avoid buffer overflow */
 		if ( sToken_idx >= TOKEN_BUF_SIZE ){
 			sToken_idx = 0;
 		}
 
-		ch = (uint8_t)tud_cdc_read_char( );
+		ch = (uint8_t)uart_getc(UART_PORT);
 
 		if ( ch == (uint8_t)'\r' ){ 
 			sToken[sToken_idx] = (uint8_t)'\0';

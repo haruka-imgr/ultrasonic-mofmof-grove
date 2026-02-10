@@ -1,3 +1,17 @@
+> **Note**
+>
+> This repository is a derivative work of the original project published by
+> TDK Corporation.
+>
+> The primary modification in this repository is an adjustment of the IO
+> (pin) definitions for a different hardware configuration.
+>
+> For details of the IO definition changes, see:
+>
+> - `docs/io_changes.md`
+>
+> This work is not endorsed by TDK Corporation or the original contributors.
+
 # CH101/201 Mof-Mof (softness) sensor information and sample program for Raspberry Pi Pico
 
 This is the Raspberry Pi Pico library for the TDK/Invensense/Chirp CH101/201.  
@@ -49,6 +63,8 @@ nRESET | GP0
 DIR | GP3
 GND | GND
 
+Note: For the console connection (UART), see [docs/io_changes.md](docs/io_changes.md).
+
 ## 2.2 Prepare a Horn (only needed CH101-00ABR for Mof-Mof)
 
 A horn can be made by a 3D printer using the following .STEP file:  
@@ -70,6 +86,10 @@ It is better to harden with a small amount of epoxy resin.
 
 After Raspberry Pi Pico setup, reconnect Raspberry Pi Pico to your host computer.  
 Open TeraTerm or any other terminal emulator.
+
+> [!IMPORTANT]
+> This version uses **Hardware UART** for the console. 
+> Please refer to [docs/io_changes.md](docs/io_changes.md) for pin connections and baud rate settings before connecting your terminal.
 
 ### Recommended sequence of command execution
 
